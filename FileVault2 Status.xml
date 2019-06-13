@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><extensionAttribute>
+<displayName>FileVault2 Status</displayName>
+<description/>
+<dataType>string</dataType>
+<scriptContentsMac>#!/bin/bash&#13;
+&#13;
+FVstatus=$(fdesetup status | grep 'FileVault is' | awk '{print$3}')&#13;
+&#13;
+&#13;
+if [[ $FVstatus == "On." ]]; then&#13;
+	echo "&lt;result&gt;On&lt;/result&gt;"&#13;
+else&#13;
+	echo "&lt;result&gt;Off&lt;/result&gt;"&#13;
+fi&#13;
+&#13;
+exit 0</scriptContentsMac>
+</extensionAttribute>

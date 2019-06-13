@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><extensionAttribute>
+<displayName>Hard Drive Format</displayName>
+<description>Report Hard Drive formatting</description>
+<dataType>string</dataType>
+<scriptContentsMac>#!/bin/sh&#13;
+echo "$(diskutil info / | awk -F': ' '/File System/{print $NF}' | xargs)"&#13;
+exit 0</scriptContentsMac>
+</extensionAttribute>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><extensionAttribute>
+<displayName>Admins</displayName>
+<description/>
+<dataType>string</dataType>
+<scriptContentsMac>#!/bin/bash&#13;
+&#13;
+# Script to detect if a computer has a local admin account on it with an UID of above 500&#13;
+&#13;
+# Initialize array&#13;
+&#13;
+list=()&#13;
+&#13;
+&#13;
+# generate user list of users with UID greater than 500&#13;
+&#13;
+for username in $(dscl . list /Users UniqueID | awk '$2 &gt; 500 { print $1 }'); do&#13;
+&#13;
+# Checks to see which usernames are reported as being admins. The&#13;
+# check is running dsmemberutil's check membership and listing the&#13;
+# accounts that are being reported as admin users. Actual check is&#13;
+# for accounts that are NOT not an admin (i.e. not standard users.)&#13;
+&#13;
+if [[ $(dsmemberutil checkmembership -U "${username}" -G admin) != *not* ]]; then&#13;
+# Any reported accounts are added to the array list&#13;
+list+=("${username}")&#13;
+fi&#13;
+done&#13;
+&#13;
+# Prints the array's list contents&#13;
+&#13;
+echo "&lt;result&gt;${list[@]}&lt;/result&gt;"&#13;
+</scriptContentsMac>
+</extensionAttribute>

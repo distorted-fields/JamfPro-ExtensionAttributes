@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><extensionAttribute>
+<displayName>Content Caching</displayName>
+<description/>
+<dataType>string</dataType>
+<scriptContentsMac>#!/bin/bash&#13;
+#&#13;
+#&#13;
+#     Created by A.Hodgson&#13;
+#      Date: 03/11/2019&#13;
+#      Purpose:&#13;
+#  &#13;
+#&#13;
+######################################&#13;
+&#13;
+cc=$(sudo -u _assetcache defaults read /Library/Preferences/com.apple.AssetCache.plist Activated)&#13;
+&#13;
+if [[ $cc == "0" ]]&#13;
+then&#13;
+	echo "&lt;result&gt;False&lt;/result&gt;" &#13;
+elif [[ $cc == "1" ]]&#13;
+then&#13;
+	echo "&lt;result&gt;True&lt;/result&gt;"&#13;
+else&#13;
+	echo "&lt;result&gt;Error&lt;/result&gt;"&#13;
+fi</scriptContentsMac>
+</extensionAttribute>
