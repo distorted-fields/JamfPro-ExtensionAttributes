@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><extensionAttribute>
+<displayName>Google Chrome Version Status</displayName>
+<description>Displays whether Chrome is up to date or out of date. </description>
+<dataType>string</dataType>
+<scriptContentsMac>#!/bin/sh&#13;
+&#13;
+if [ ! -f "/Applications/Google Chrome.app/Contents/Info.plist" ] ; then&#13;
+	echo "&lt;result&gt;Chrome isn't installed&lt;/result&gt;"&#13;
+	exit 0&#13;
+fi&#13;
+&#13;
+INSTALLEDVERSION=$( defaults read "/Applications/Google Chrome.app/Contents/Info.plist" CFBundleShortVersionString )&#13;
+CURRENTVERSION=$( curl -s https://omahaproxy.appspot.com/history | awk -F',' '/mac,stable/{print $3; exit}' )&#13;
+&#13;
+if [[ "$INSTALLEDVERSION" == "$CURRENTVERSION" ]]; then&#13;
+	echo "&lt;result&gt;Latest - $CURRENTVERSION&lt;/result&gt;"&#13;
+else&#13;
+	echo "&lt;result&gt;Out Of Date&lt;/result&gt;"&#13;
+fi</scriptContentsMac>
+</extensionAttribute>

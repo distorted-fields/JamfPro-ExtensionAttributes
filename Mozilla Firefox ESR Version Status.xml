@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><extensionAttribute>
+<displayName>Mozilla Firefox ESR Version Status</displayName>
+<description>Displays whether Firefox ESR is up to date or out of date. </description>
+<dataType>string</dataType>
+<scriptContentsMac>#!/bin/sh&#13;
+## Get OS version and adjust for use with the URL string&#13;
+OSvers_URL=$( sw_vers -productVersion | sed 's/[.]/_/g' )&#13;
+&#13;
+## Set the User Agent string for use with curl&#13;
+userAgent="Mozilla/5.0 (Macintosh; Intel Mac OS X $OSvers_URL) AppleWebKit/535.6.2 (KHTML, like Gecko) Version/5.2 Safari/535.6.2"&#13;
+&#13;
+if [ ! -f "/Applications/Firefox.app/Contents/Info.plist" ] ; then&#13;
+	echo "&lt;result&gt;Firefox isn't installed&lt;/result&gt;"&#13;
+	exit 0&#13;
+fi&#13;
+&#13;
+INSTALLEDVERSION=$( defaults read "/Applications/Firefox.app/Contents/Info.plist" CFBundleShortVersionString )&#13;
+CURRENTVERSION=$( curl -s -A "$userAgent" https://www.mozilla.org/en-US/firefox/enterprise/ | grep 'data-esr-versions' | sed -e 's/.* data-esr-versions="\(.*\)".*/\1/' -e 's/\"//' | /usr/bin/awk '{print $2}' )&#13;
+&#13;
+if [[ "$INSTALLEDVERSION" == "$CURRENTVERSION" ]]; then&#13;
+	echo "&lt;result&gt;Latest - $CURRENTVERSION&lt;/result&gt;"&#13;
+else&#13;
+	echo "&lt;result&gt;Out Of Date&lt;/result&gt;"&#13;
+fi</scriptContentsMac>
+</extensionAttribute>
