@@ -21,6 +21,7 @@ SierraRegEx="(MacBookAir[3-7]|MacBookPro(6|7|8|9|1[0-2])|MacPro(5|6)|iMac1[0-7]|
 HighSierraRegEx="(MacBookAir[3-7]|MacBookPro(6|7|8|9|1[0-4])|MacPro(5|6)|iMac(Pro)?1[0-8]?|MacBook(6|7|8|9|10)|Macmini[4-7]),.*"&#13;
 MojaveRegEx="(MacBookAir[5-8]|MacBookPro(9|1[0-5])|MacPro(5|6)|iMac(Pro)?1[3-9]?|MacBook(10|9|8)|Macmini[6-8]),.*"&#13;
 CatalinaRegEx="(MacBookAir[5-8]|MacBookPro(9|1[0-6])|MacPro6|iMac(Pro)?1[3-9]?|MacBook(10|9|8)|Macmini[6-8]),.*"&#13;
+BigSurRegEx="(MacBookAir[6-9|10]|MacBookPro1[0-6]|MacPro[6-7]|MacBook(10|9|8)|Macmini[7-8]|MacPro[6-7]|iMacPro1)|iMac(14,4|(1[5-9]|20),.*)"
 &#13;
 # Compare Model Identifier against High Sierra Regex compatible Macs&#13;
 if [[ $myModel =~ $SierraRegEx ]]; then&#13;
