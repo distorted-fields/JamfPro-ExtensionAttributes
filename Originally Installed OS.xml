@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><extensionAttribute>
+<displayName>Originally Installed OS</displayName>
+<description/>
+<dataType>string</dataType>
+<scriptContentsMac>#!/bin/bash&#13;
+#&#13;
+#&#13;
+#     Created by A.Hodgson&#13;
+#      Date: 02/18/2021&#13;
+#      Purpose:&#13;
+#  &#13;
+#&#13;
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # &#13;
+currentOSversion=$(sw_vers -productVersion | cut -c 1-5)&#13;
+originalOSversion=$(/usr/bin/awk '/macOS Sierra/ || /macOS 10.13/ || /macOS High Sierra/ || /macOS Mojave/ || /macOS Catalina/ || /macOS 11/' /Library/Receipts/InstallHistory.plist | grep -v "Apple - macOS " | /usr/bin/head -1)&#13;
+&#13;
+case "$originalOSversion" in&#13;
+	*"Sierra"* )&#13;
+	originalOSversion="10.12"&#13;
+	;;&#13;
+	*"10.13"* )&#13;
+	originalOSversion="10.13"&#13;
+	;;&#13;
+	*"High Sierra"* )&#13;
+	originalOSversion="10.13"&#13;
+	;;&#13;
+	*"Mojave"* )&#13;
+	originalOSversion="10.14"&#13;
+	;;&#13;
+	*"Catalina"* )&#13;
+	originalOSversion="10.15"&#13;
+	;;&#13;
+	*"11"* )&#13;
+	originalOSversion="11.0"&#13;
+	;;&#13;
+	*"Big Sur"* )&#13;
+	originalOSversion="11.0"&#13;
+	;;&#13;
+	* ) &#13;
+	originalOSversion="$currentOSversion"&#13;
+	;;&#13;
+esac&#13;
+&#13;
+if (( $(echo "$currentOSversion &lt; $originalOSversion" |bc -l) )); then&#13;
+	originalOSversion="$currentOSversion"&#13;
+fi&#13;
+&#13;
+echo "&lt;result&gt;$originalOSversion&lt;/result&gt;"&#13;
+&#13;
+#exit script gracefully&#13;
+exit 0 </scriptContentsMac>
+</extensionAttribute>
