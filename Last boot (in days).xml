@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><extensionAttribute>
+<displayName>Last boot (in days)</displayName>
+<description/>
+<dataType>number</dataType>
+<scriptContentsMac>#!/bin/bash&#13;
+#&#13;
+#&#13;
+#     Created by A.Hodgson&#13;
+#      Date: 11/11/2019&#13;
+#      Purpose:&#13;
+#  &#13;
+#&#13;
+######################################&#13;
+&#13;
+upValue=$(uptime | awk '{print $3}')&#13;
+upUnit=$(uptime | awk '{print $4}' | sed 's/,*$//g')&#13;
+&#13;
+&#13;
+if [ "$upUnit" = "mins" ]; then&#13;
+	#1440 minutes = 1 day&#13;
+	minConvert=0.000694444&#13;
+	daysValue=$(awk -v upValue="${upValue}" -v minConvert="${minConvert}" 'BEGIN{print (upValue*minConvert)}')&#13;
+elif [ "$upUnit" = "days" ]; then&#13;
+	daysValue="$upValue"&#13;
+else&#13;
+	#24 hours = 1 day&#13;
+	hourConvert=0.0416667&#13;
+	daysValue=$(awk -v upValue="${upValue}" -v hourConvert="${hourConvert}" 'BEGIN{print (upValue*hourConvert)}')&#13;
+fi&#13;
+&#13;
+#round the number &#13;
+daysValue=$(echo "$daysValue" | cut -c1-4)&#13;
+&#13;
+echo "&lt;result&gt;$daysValue&lt;/result&gt;"&#13;
+&#13;
+#exit script gracefully&#13;
+exit 0 </scriptContentsMac>
+</extensionAttribute>

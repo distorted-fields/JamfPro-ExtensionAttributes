@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><extensionAttribute>
+<displayName>Duplicate Profile Problem</displayName>
+<description/>
+<dataType>string</dataType>
+<scriptContentsMac>#!/bin/bash&#13;
+#&#13;
+#&#13;
+#     Created by A.Hodgson&#13;
+#      Date: 2/28/2020&#13;
+#      Purpose: Report on the number of profiles with text in the username area (ISD11 doesn't deploy at the user leve).&#13;
+#				If the count is &gt; 0 then there is a problem with the device record and the device needs to be re-enrolled. &#13;
+#  &#13;
+#&#13;
+######################################&#13;
+&#13;
+#################### Jamf Pro Variables ####################&#13;
+JAMF_USER="API_User" # Full Jamf Pro admin username&#13;
+JAMF_PASS="v5yxGK=3WP#bXkAX" # Jamf Pro admin password&#13;
+JAMF_URL="https://jss.anoka.k12.mn.us:8443" # Full Jamf Pro URL including port, no trailing slash please; ex. https://jamf.com:8443&#13;
+&#13;
+#################### Main Function ####################&#13;
+&#13;
+# get device serial&#13;
+sn=$(system_profiler SPHardwareDataType | awk '/Serial/ {print $4}')&#13;
+#sn=C02KP9RGDNCR&#13;
+&#13;
+# get devices from the saved adv search&#13;
+device_info=$(curl -sku $JAMF_USER:$JAMF_PASS -H "Accept: application/xml" $JAMF_URL/JSSResource/computers/serialnumber/"$sn")&#13;
+&#13;
+&#13;
+# create a template file to parse the XML response&#13;
+cat &lt;&lt; EOF &gt; /tmp/stylesheet.xslt&#13;
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#13;
+&lt;xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;&#13;
+	&lt;xsl:output method="text"/&gt;&#13;
+	&lt;xsl:template match="/"&gt;&#13;
+      &lt;xsl:value-of select="count(computer/configuration_profiles/configuration_profile/name[text()])"/&gt;&#13;
+      &lt;xsl:text&gt;&#13;
+      &lt;/xsl:text&gt;&#13;
+	&lt;/xsl:template&gt;&#13;
+&lt;/xsl:stylesheet&gt;&#13;
+EOF&#13;
+&#13;
+# parse the API response and output the desired values based on the template above&#13;
+reported_profile_count=$( echo "$device_info" | xsltproc /tmp/stylesheet.xslt - )&#13;
+# need to "convert" the output to a number so the IF statement correctly evaluates&#13;
+reported_profile_count=$((reported_profile_count+0))&#13;
+&#13;
+if [ "$reported_profile_count" -gt 0 ]; then&#13;
+	echo "&lt;result&gt;Detected&lt;/result&gt;"&#13;
+else&#13;
+	echo "&lt;result&gt;Not Detected&lt;/result&gt;"&#13;
+fi&#13;
+&#13;
+#exit script gracefully&#13;
+exit 0 </scriptContentsMac>
+</extensionAttribute>

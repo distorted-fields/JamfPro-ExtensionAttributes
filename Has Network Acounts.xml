@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><extensionAttribute>
+<displayName>Has Network Acounts</displayName>
+<description/>
+<dataType>string</dataType>
+<scriptContentsMac>#!/bin/bash&#13;
+#&#13;
+#&#13;
+#     Created by A.Hodgson&#13;
+#      Date: 06/09/2021&#13;
+#      Purpose: List all home folders in /Users and check to see if group ownership is "Domain" - return positive for network accounts&#13;
+#  &#13;
+#&#13;
+#############################################################&#13;
+hasNetworkAccounts="False" &#13;
+&#13;
+for entry in /Users/*; do&#13;
+	user=$(echo "$entry" | cut -d / -f 3)&#13;
+	if [[ $user != Shared ]] ; then		&#13;
+		isUserLocal=$(dscl . -read /Users/$user | grep AppleMetaNodeLocation: | cut -d / -f 2)&#13;
+		if [[ $isUserLocal != Local ]] ; then&#13;
+			hasNetworkAccounts="True"&#13;
+		fi&#13;
+	fi&#13;
+done&#13;
+&#13;
+echo "&lt;result&gt;$hasNetworkAccounts&lt;/result&gt;"&#13;
+&#13;
+</scriptContentsMac>
+</extensionAttribute>
