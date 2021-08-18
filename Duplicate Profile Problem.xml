@@ -7,8 +7,8 @@
 #&#13;
 #     Created by A.Hodgson&#13;
 #      Date: 2/28/2020&#13;
-#      Purpose: Report on the number of profiles with text in the username area (ISD11 doesn't deploy at the user leve).&#13;
-#				If the count is &gt; 0 then there is a problem with the device record and the device needs to be re-enrolled. &#13;
+#      Purpose: Report on the number of profiles with text in the username area (assuming no profiles deployed at the user leve).&#13;
+#				If the count is &gt; 0 then there is a problem with the device record - Jamf PI-004813 &#13;
 #  &#13;
 #&#13;
 ######################################&#13;
