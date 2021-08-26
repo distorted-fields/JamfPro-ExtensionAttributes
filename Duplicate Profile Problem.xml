@@ -14,9 +14,9 @@
 ######################################&#13;
 &#13;
 #################### Jamf Pro Variables ####################&#13;
-JAMF_USER="API_User" # Full Jamf Pro admin username&#13;
-JAMF_PASS="v5yxGK=3WP#bXkAX" # Jamf Pro admin password&#13;
-JAMF_URL="https://jss.anoka.k12.mn.us:8443" # Full Jamf Pro URL including port, no trailing slash please; ex. https://jamf.com:8443&#13;
+JAMF_USER="" # Full Jamf Pro admin username&#13;
+JAMF_PASS="" # Jamf Pro admin password&#13;
+JAMF_URL="" # Full Jamf Pro URL including port, no trailing slash please; ex. https://jamf.com:8443&#13;
 &#13;
 #################### Main Function ####################&#13;
 &#13;
