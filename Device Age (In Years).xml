@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><extensionAttribute>
+<displayName>Device Age (In Years)</displayName>
+<description/>
+<dataType>number</dataType>
+<scriptContentsMac>#!/bin/bash&#13;
+#&#13;
+#&#13;
+#&#13;
+#           Created by A.Hodgson                     &#13;
+#            Date: 2022-04-13                            &#13;
+#            Purpose: Report the device age in relation to the current year. &#13;
+#&#13;
+#&#13;
+#&#13;
+#############################################################&#13;
+function FormatSerialNumber {&#13;
+                # We will make a curl to Apple to get the computer's model year but first need to know&#13;
+                # the length of the SN.&#13;
+                serialNumber=$(system_profiler SPHardwareDataType | awk '/Serial/ {print $4}')&#13;
+                snLength=$(echo ${#serialNumber})&#13;
+                &#13;
+                if [[ $snLength -eq 12 ]];&#13;
+                then&#13;
+                        # SN is 12 characters, retrieving last 4 characters to send to Apple&#13;
+                        snAppend=$(echo $serialNumber | tail -c 5)&#13;
+                else&#13;
+                        # SN is 11 characters, retrieving last 3 characters to send to Apple&#13;
+                        snAppend=$(echo $serialNumber | tail -c 4)&#13;
+                fi&#13;
+        }&#13;
+&#13;
+&#13;
+if [ $(arch) == "arm64" ]; then&#13;
+        full_model=$(/usr/libexec/PlistBuddy -c "Print 0:product-name" /dev/stdin &lt;&lt;&lt; "$(/usr/sbin/ioreg -ar -d1 -k product-name)")&#13;
+else&#13;
+		FormatSerialNumber&#13;
+        full_model=$(curl -s "https://support-sp.apple.com/sp/product?cc=$snAppend" | xmllint --format - 2&gt;/dev/null | awk -F'&gt;|&lt;' '/&lt;configCode&gt;/{print $3}')&#13;
+fi&#13;
+&#13;
+model_year=$(echo "$full_model" | awk '{print $4}' | sed 's/[-(,)]//g')	 		#trim any special characters&#13;
+this_year=$(date +%Y)&#13;
+&#13;
+age="$((this_year-model_year))"&#13;
+&#13;
+echo "&lt;result&gt;$age&lt;/result"&#13;
+</scriptContentsMac>
+</extensionAttribute>
